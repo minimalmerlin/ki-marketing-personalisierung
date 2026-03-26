@@ -1,0 +1,71 @@
+# === Daten (niemals in Git) ===
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.json
+*.xlsx
+*.xls
+*.tsv
+*.pkl
+*.pickle
+*.feather
+*.h5
+*.hdf5
+
+# Regulatorische PDFs nur wenn sensibel — sonst data/external/ freigeben
+# data/external/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# === Jupyter ===
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# === Outputs (selektiv committen) ===
+outputs/figures/
+outputs/tables/
+# Einzelne Outputs explizit hinzufügen: git add outputs/figures/fig_rfm_cluster.png
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Env-Dateien ===
+.env
+.env.*
+*.key
+secrets/
+
+# === Logs & Temp ===
+*.log
+*.tmp
+tmp/
+temp/
+
+# === mypy / lint ===
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
