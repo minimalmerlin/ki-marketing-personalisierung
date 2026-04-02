@@ -30,37 +30,64 @@
 
 ## Datensatz 2: UCI Bank Marketing
 
+## 📊 Datensatz 2: Bank Marketing (UCI)
+
+### 🧾 Feldbeschreibung (Original + Feature Engineering)
+
 | Feld | Beschreibung | Typ | Beispielwert | Null? | Hypothese |
-|------|-------------|-----|-------------|-------|-----------|
-| `age` | Alter des Kunden | INT | `35` | Nein | H1, H2 |
-| `job` | Berufsfeld | STRING | `admin.`, `blue-collar` | Nein | H1 |
+|------|-------------|-----|--------------|-------|-----------|
+| `age` | Alter des Kunden | INT64 | `58` | Nein | H1, H2 |
+| `job` | Berufsfeld des Kunden | STRING | `management`, `technician` | Ja (288) | H1 |
 | `marital` | Familienstand | STRING | `married`, `single` | Nein | H1 |
-| `education` | Bildungsniveau | STRING | `secondary`, `tertiary` | Nein | H1 |
+| `education` | Bildungsniveau | STRING | `secondary`, `tertiary` | Ja (1857) | H1 |
 | `default` | Kreditausfall-Historie | STRING | `yes`, `no` | Nein | H1 |
-| `balance` | Kontostand (EUR) | INT | `2000` | Nein | H1, H2 |
+| `balance` | Durchschnittlicher Kontostand (EUR) | INT64 | `2000` | Nein | H1, H2 |
 | `housing` | Wohnkredit | STRING | `yes`, `no` | Nein | H1 |
 | `loan` | Privatkredit | STRING | `yes`, `no` | Nein | H1 |
-| `contact` | Kontaktkanal | STRING | `cellular`, `telephone` | Ja | H1 |
-| `day` | Letzter Kontakttag | INT | `15` | Nein | — |
-| `month` | Letzter Kontaktmonat | STRING | `may`, `jun` | Nein | — |
-| `duration` | Gesprächsdauer (Sekunden) | INT | `261` | Nein | H1 |
-| `campaign` | Anzahl Kontakte diese Kampagne | INT | `3` | Nein | H1 |
-| `pdays` | Tage seit letzter Kampagne | INT | `999` = nie kontaktiert | Nein | H1 |
-| `previous` | Anzahl Kontakte vorherige Kampagnen | INT | `0` | Nein | H1 |
-| `poutcome` | Ergebnis vorheriger Kampagne | STRING | `success`, `failure`, `unknown` | Ja | H1 |
-| **`y`** | **Zielvariable: Hat Kunde Termin gebucht?** | STRING | `yes`, `no` | Nein | **H1** |
-
-**Quelle:** UCI Machine Learning Repository — Bank Marketing Dataset
-**URL:** https://archive.ics.uci.edu/dataset/222/bank+marketing
-**Lizenz:** CC BY 4.0
-**Datei:** `bank-full.csv` (vollständiger Datensatz, `;`-separiert)
-**Zeilen:** 45.211 | **Spalten:** 17
-**Besonderheiten / bekannte Probleme:**
-- [ ] `duration` sollte für realistische Vorhersagen ausgeschlossen werden (Post-Contact-Information)
-- [ ] `pdays = 999` kodiert "nie kontaktiert" — nicht als numerischer Wert interpretieren
-- [ ] Klassen-Imbalance: ~88% `no`, ~12% `yes`
+| `contact` | Kontaktkanal | STRING | `cellular`, `telephone` | Ja (13020) | H1 |
+| `day` | Tag des letzten Kontakts | INT64 | `15` | Nein | — |
+| `month` | Monat des letzten Kontakts | STRING | `may`, `jun` | Nein | — |
+| `campaign` | Anzahl Kontakte in dieser Kampagne | INT64 | `1` | Nein | H1 |
+| `pdays` | Tage seit letzter Kampagne (`-1` = nie kontaktiert → `NaN`) | FLOAT64 | `NaN` | Ja (36.954) | H1 |
+| `previous` | Anzahl Kontakte früherer Kampagnen | INT64 | `0` | Nein | H1 |
+| `poutcome` | Ergebnis früherer Kampagne | STRING | `success`, `failure`, `unknown` | Nein (nach Cleaning) | H1 |
+| `Target` | Zielvariable: Hat Kunde Termin gebucht? | INT64 | `0` oder `1` | Nein | H1 |
+| `balance_cat` | Kategorisierung des Kontostands | CATEGORY | `medium`, `high` | Ja (14) | H2 |
+| `was_contacted_before` | Wurde Kunde früher kontaktiert? | INT64 | `0`, `1` | Nein | H1 |
 
 ---
+
+## 📦 **Metadaten**
+
+- **Zeilen:** 45.211  
+- **Spalten (Original):** 16  
+- **Spalten (nach Cleaning):** 18  
+- **Spalten (nach One‑Hot Encoding):** 57  
+
+### **Target Imbalance**
+- `0` (no): **88.30%**  
+- `1` (yes): **11.69%**
+
+---
+
+## ⚠️ **Besonderheiten / bekannte Probleme**
+
+- `pdays = -1` wurde korrekt zu `NaN` konvertiert  
+- `poutcome`, `contact`, `education`, `job` hatten viele fehlende Werte → ersetzt durch `unknown`  
+- `balance_cat` hat 14 `NaN` wegen Grenzwerten beim Binning  
+- starke Klassen-Imbalance → wichtig für Modellierung  
+- `duration` wurde entfernt (post-event leakage)  
+- numerische Variablen in `df_encoded` skaliert (StandardScaler)  
+- kategorische Variablen vollständig One‑Hot encodiert (drop_first=False → keine Informationsverluste)
+
+---
+
+## 🧩 **Finale Outputs**
+
+- **df** → 18 Spalten (cleaned dataset)  
+- **df_encoded** → 57 Spalten (ready for ML)  
+- **Keine Daten gelöscht**  
+- **Alle Transformationen dokumentiert**  
 
 ## Datensatz 3: EDPB Profiling Guidelines (WP 251 rev.01)
 
