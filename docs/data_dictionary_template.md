@@ -1,7 +1,7 @@
 # Data Dictionary — KI-gestützte Personalisierung im Marketing
 
 > **Verantwortlich:** Person B
-> **Status:** TEMPLATE — Ausfüllen bis M1 (KW 13)
+> **Status:** Status: FINAL — Version 1.0 (Stand: 02.04.2026)
 > **Zweck:** Vollständige Dokumentation aller genutzten Datensätze als SSOT für das Team
 
 ---
