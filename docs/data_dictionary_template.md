@@ -7,24 +7,21 @@
 ---
 
 ## Datensatz 1: GA4 BigQuery Sample Ecommerce
-
 | Feld | Beschreibung | Typ | Beispielwert | Null? | Hypothese |
-|------|-------------|-----|-------------|-------|-----------|
-| `event_date` | Datum des Events (YYYYMMDD) | STRING | `20210101` | Nein | H2 |
-| `event_timestamp` | Unix-Timestamp in Mikrosekunden | INT64 | `1609459200000000` | Nein | — |
-| `event_name` | Name des Events | STRING | `purchase`, `page_view` | Nein | H2 |
-| `user_pseudo_id` | Anonymisierte User-ID (kein PII) | STRING | `abc123...` | Nein | H2 |
-| `user_id` | App/Web User-ID (falls vorhanden) | STRING | — | Ja | — |
-| `ga_session_id` | Session-ID | INT64 | `123456789` | Ja | H2 |
-| `ecommerce.transaction_id` | Transaktions-ID | STRING | `T_12345` | Ja | H2 |
-| `ecommerce.purchase_revenue` | Umsatz der Transaktion (USD) | FLOAT64 | `49.99` | Ja | H2 |
-| `ecommerce.items` | Array mit Produktdetails | ARRAY | `[{item_id, item_name, ...}]` | Ja | H2 |
-| *(weitere Felder ergänzen)* | | | | | |
+|------|-------------|-----|--------------|-------|-----------|
+| `event_date` | Datum des Events (YYYYMMDD) | INT64 | `20210131` | Nein | H2 |
+| `event_timestamp` | Unix-Timestamp in Mikrosekunden | FLOAT64 | `1612070000000000` | Nein | — |
+| `event_name` | Name des Events | STRING | `page_view`, `scroll`, `session_start` | Nein | H2 |
+| `user_pseudo_id` | Anonymisierte User-ID (kein PII) | FLOAT64 | `1026454.427` | Nein | H2 |
+| `platform` | Plattform des Besuchers | STRING | `WEB` | Nein | H1 |
+| `device_category` | Gerätetyp | STRING | `mobile` | Nein | H1 |
+| `country` | Land des Nutzers | STRING | `United States` | Nein | H3 |
+
 
 **Quelle:** Google BigQuery Public Datasets — `bigquery-public-data.ga4_obfuscated_sample_ecommerce`
 **Lizenz:** Google Public Data License
-**Zeitraum:** [hier eintragen nach Download]
-**Zeilen:** [hier eintragen]
+**Zeitraum:31.01.2021
+**Zeilen:26489
 **Besonderheiten / bekannte Probleme:**
 - [ ] Obfuskierte User-IDs — kein Cross-Device-Tracking möglich
 - [ ] Keine demografischen Daten enthalten
