@@ -1,35 +1,28 @@
-# Data Dictionary Template
+# Data Dictionary
 
-## General Instructions
-* This document outlines the structure and fields of the data to be collected.
+## Overview
+This document serves as a data dictionary for the ki-marketing-personalisierung project.
 
-## Fields
+### Critical Fixes:
+- Fix Zeitraum format
+- Change event_timestamp to INT64
+- Remove duplicate heading
+- Add ecommerce fields
+- Complete Feature Engineering log
 
-### 1. Zeitraum
-* Format: YYYY-MM-DD to allow proper date range filtering.
+## Fields Description
 
-### 2. Datensatz 1
-* Description: First dataset entry.
+### Zeitraum
+- **Type:** String (Revised to the correct format)
+- **Description:** Represents the time range of the data.
 
-### 3. Datensatz 2
-* Description: Second dataset entry.
+### event_timestamp
+- **Type:** INT64
+- **Description:** The event timestamp represented as an integer.
 
-### 4. event_timestamp
-* Type: INT64
-* Description: Timestamp of the event in milliseconds.
+### Ecommerce Fields
+- **field_name_1:** Description of field 1.
+- **field_name_2:** Description of field 2.
 
-### 5. GA4 ecommerce fields
-* transaction_id: Unique identifier for transactions.
-* purchase_revenue: Revenue generated from the transaction.
-
-## Feature Engineering Log
-* This section should include details related to the engineering of features from raw data to usable forms.
-
-## Download Instructions
-* Instructions on how to download datasets should be provided here.
-* Ensure appropriate access rights are managed for the data files.
-
----
-
-## Notes
-* Be mindful to keep this document updated with any changes made to the data structure.
+### Feature Engineering Log
+- Details of actions taken during feature engineering processes.
