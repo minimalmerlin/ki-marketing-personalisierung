@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = REPO_ROOT / "data" / "raw"
 
 
-def load_bank_marketing(filename: str = "bank-full.csv") -> pd.DataFrame:
+def load_bank_marketing(filename: str = "bank-additional-full.csv") -> pd.DataFrame:
     """Lädt den UCI Bank Marketing Datensatz (;-separiert).
 
     Args:
