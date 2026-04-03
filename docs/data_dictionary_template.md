@@ -36,58 +36,60 @@
 
 | Feld | Beschreibung | Typ | Beispielwert | Null? | Hypothese |
 |------|-------------|-----|--------------|-------|-----------|
-| `age` | Alter des Kunden | INT64 | `58` | Nein | H1, H2 |
-| `job` | Berufsfeld des Kunden | STRING | `management`, `technician` | Ja (288) | H1 |
-| `marital` | Familienstand | STRING | `married`, `single` | Nein | H1 |
-| `education` | Bildungsniveau | STRING | `secondary`, `tertiary` | Ja (1857) | H1 |
+| `age` | Alter des Kunden | INT64 | `56` | Nein | H1 |
+| `job` | Berufsfeld des Kunden | STRING | `services`, `admin.`, `technician` | Nein | H1 |
+| `marital` | Familienstand | STRING | `married`, `single`, `divorced` | Nein | H1 |
+| `education` | Bildungsniveau | STRING | `high.school`, `university.degree` | Nein | H1 |
 | `default` | Kreditausfall-Historie | STRING | `yes`, `no` | Nein | H1 |
-| `balance` | Durchschnittlicher Kontostand (EUR) | INT64 | `2000` | Nein | H1, H2 |
 | `housing` | Wohnkredit | STRING | `yes`, `no` | Nein | H1 |
 | `loan` | Privatkredit | STRING | `yes`, `no` | Nein | H1 |
-| `contact` | Kontaktkanal | STRING | `cellular`, `telephone` | Ja (13020) | H1 |
-| `day` | Tag des letzten Kontakts | INT64 | `15` | Nein | — |
+| `contact` | Kontaktkanal | STRING | `cellular`, `telephone` | Nein | H1 |
 | `month` | Monat des letzten Kontakts | STRING | `may`, `jun` | Nein | — |
-| `campaign` | Anzahl Kontakte in dieser Kampagne | INT64 | `1` | Nein | H1 |
-| `pdays` | Tage seit letzter Kampagne (`-1` = nie kontaktiert → `NaN`) | FLOAT64 | `NaN` | Ja (36.954) | H1 |
-| `previous` | Anzahl Kontakte früherer Kampagnen | INT64 | `0` | Nein | H1 |
-| `poutcome` | Ergebnis früherer Kampagne | STRING | `success`, `failure`, `unknown` | Nein (nach Cleaning) | H1 |
-| `Target` | Zielvariable: Hat Kunde Termin gebucht? | INT64 | `0` oder `1` | Nein | H1 |
-| `balance_cat` | Kategorisierung des Kontostands | CATEGORY | `medium`, `high` | Ja (14) | H2 |
-| `was_contacted_before` | Wurde Kunde früher kontaktiert? | INT64 | `0`, `1` | Nein | H1 |
+| `day_of_week` | Wochentag des letzten Kontakts | STRING | `mon`, `tue` | Nein | — |
+| `duration` | Dauer des letzten Kontakts (Sekunden) | INT64 | `180` | Nein | **Leakage → entfernt** |
+| `campaign` | Anzahl Kontakte in dieser Kampagne | INT64 | `2` | Nein | H1 |
+| `pdays` | Tage seit letzter Kampagne (`999` = nie kontaktiert) | INT64 | `999` | Nein | H1 |
+| `previous` | Anzahl früherer Kontakte | INT64 | `0` | Nein | H1 |
+| `poutcome` | Ergebnis früherer Kampagne | STRING | `nonexistent`, `success`, `failure` | Nein | H1 |
+| `emp.var.rate` | Beschäftigungsänderungsrate | FLOAT64 | `1.1` | Nein | H2 |
+| `cons.price.idx` | Verbraucherpreisindex | FLOAT64 | `93.994` | Nein | H2 |
+| `cons.conf.idx` | Konsumentenvertrauensindex | FLOAT64 | `-36.4` | Nein | H2 |
+| `euribor3m` | 3‑Monats Euribor | FLOAT64 | `4.857` | Nein | H2 |
+| `nr.employed` | Anzahl Beschäftigte | FLOAT64 | `5191.0` | Nein | H2 |
+| `y` | Zielvariable: Hat Kunde zugesagt? | STRING | `yes`, `no` | Nein | H1 |
 
 ---
 
 ## 📦 **Metadaten**
 
-- **Zeilen:** 45.211  
-- **Spalten (Original):** 16  
-- **Spalten (nach Cleaning):** 18  
-- **Spalten (nach One‑Hot Encoding):** 57  
+- **Zeilen:** 41.176  
+- **Spalten (Original):** 21  
+- **Spalten (nach Cleaning):** 20 (da `duration` entfernt wurde)  
+- **Spalten (nach One‑Hot Encoding):** abhängig vom Encoding (typisch 50–60+)  
 
 ### **Target Imbalance**
-- `0` (no): **88.30%**  
-- `1` (yes): **11.69%**
+- `no`: **88.74%**  
+- `yes`: **11.26%**
 
 ---
 
 ## ⚠️ **Besonderheiten / bekannte Probleme**
 
-- `pdays = -1` wurde korrekt zu `NaN` konvertiert  
-- `poutcome`, `contact`, `education`, `job` hatten viele fehlende Werte → ersetzt durch `unknown`  
-- `balance_cat` hat 14 `NaN` wegen Grenzwerten beim Binning  
+- `duration` wurde entfernt → **post-event leakage**  
+- `pdays = 999` bedeutet **nie kontaktiert** (logisches Missing)  
 - starke Klassen-Imbalance → wichtig für Modellierung  
-- `duration` wurde entfernt (post-event leakage)  
-- numerische Variablen in `df_encoded` skaliert (StandardScaler)  
-- kategorische Variablen vollständig One‑Hot encodiert (drop_first=False → keine Informationsverluste)
+- kategorische Variablen haben hohe Cardinality (`job`, `education`)  
+- numerische Variablen weisen unterschiedliche Skalen auf → StandardScaler empfohlen  
+- `poutcome` enthält viele `nonexistent` → wichtig für Feature Engineering  
 
 ---
 
 ## 🧩 **Finale Outputs**
 
-- **df** → 18 Spalten (cleaned dataset)  
-- **df_encoded** → 57 Spalten (ready for ML)  
+- **df_cleaned** → 20 Spalten (ohne `duration`)  
+- **df_encoded** → One‑Hot encodiert, skaliert, modellbereit  
 - **Keine Daten gelöscht**  
-- **Alle Transformationen dokumentiert**  
+- **Alle Transformationen dokumentiert**
 
 ## Datensatz 3: EDPB Profiling Guidelines (WP 251 rev.01)
 
