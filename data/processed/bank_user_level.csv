@@ -1,0 +1,3 @@
+contact,total_contacts,avg_duration,max_duration,min_duration,successful_contacts,has_success,last_month,last_day,age,job,marital,education,default,housing,loan,emp_var_rate,cons_price_idx,cons_conf_idx,euribor3m,nr_employed
+cellular,24005,250.1760883149344,1271,11,2942,1,aug,tue,39.83057696313268,admin.,married,university.degree,no,yes,no,-0.3407706727765049,93.28913530514475,-41.36648614871902,3.192601083107686,5159.287669235576
+telephone,14305,238.83432366305487,1271,11,624,1,aug,tue,40.097378538972386,blue-collar,married,high.school,no,no,no,0.9350996155190493,94.02677749038797,-38.90056623558196,4.593194477455435,5195.622740300594
