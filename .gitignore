@@ -1,7 +1,11 @@
 # === Daten (niemals in Git) ===
 data/raw/
-data/processed/
+data/processed/*
 *.csv
+
+# === Segment-Outputs (AP 2.1, Person A) ===
+!data/processed/ga4_segments.csv
+!data/processed/bank_segments.csv
 *.parquet
 *.json
 *.xlsx
