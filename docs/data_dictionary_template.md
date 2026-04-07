@@ -131,7 +131,7 @@ This repository contains the numeric-encoded version of the UCI Bank Marketing d
 
 ## Feature Engineering Log
 
-> Hier dokumentieren welche neuen Features aus den Rohdaten abgeleitet wurden.
+> Hier dokumentieren wir, welche neuen Features aus den Rohdaten abgeleitet wurden.
 
 | Feature-Name | Herkunft | Formel / Logik | Datei |
 |-------------|----------|----------------|-------|
@@ -140,4 +140,30 @@ This repository contains the numeric-encoded version of the UCI Bank Marketing d
 | `rfm_monetary` | GA4 | Summe `ecommerce.purchase_revenue` je User | `src/data/preprocessor.py` |
 | `rfm_score` | GA4 | Quintil-Score 1–5 für R, F, M kombiniert | `src/analysis/segmentation.py` |
 | `cluster_label` | GA4 | KMeans-Cluster-ID | `src/analysis/segmentation.py` |
-| *(weitere ergänzen)* | | | |
+
+### Zusätzliche GA4 Features
+| Feature-Name | Herkunft | Formel / Logik | Datei |
+|-------------|----------|----------------|-------|
+| `event_count` | GA4 | Gesamtanzahl aller Events pro User | `src/data/preprocessor.py` |
+| `unique_event_types` | GA4 | Anzahl unterschiedlicher Event-Namen | `src/data/preprocessor.py` |
+| `avg_session_events` | GA4 | Durchschnittliche Events pro Session | `src/data/preprocessor.py` |
+| `is_mobile` | GA4 | 1 wenn `device_category = mobile` | `src/data/preprocessor.py` |
+| `country_group` | GA4 | EU / Non‑EU / Other basierend auf `country` | `src/data/preprocessor.py` |
+| `user_activity_score` | GA4 | Normierte Kombination aus `event_count` + Engagement | `src/analysis/recommender.py` |
+| `engagement_level` | GA4 | Low / Medium / High basierend auf Event-Intensität | `src/analysis/recommender.py` |
+
+### Bank Marketing Features
+| Feature-Name | Herkunft | Formel / Logik | Datei |
+|-------------|----------|----------------|-------|
+| `contact_intensity` | Bank | `campaign + previous` | `src/data/preprocessor.py` |
+| `is_first_contact` | Bank | 1 wenn `pdays = -1` | `src/data/preprocessor.py` |
+| `call_success_rate` | Bank | `previous_success / previous` | `src/data/preprocessor.py` |
+| `age_bucket` | Bank | Altersgruppen (18–30, 31–45, 46–60, 60+) | `src/data/preprocessor.py` |
+| `economic_stress_index` | Bank | Normierte Kombination der Makro-Variablen | `src/data/preprocessor.py` |
+
+### Recommender-spezifische Features
+| Feature-Name | Herkunft | Formel / Logik | Datei |
+|-------------|----------|----------------|-------|
+| `similarity_vector` | GA4 / Content | TF‑IDF oder Embedding-Vektor für Content-Ähnlichkeit | `src/analysis/recommender.py` |
+| `precision_at_k_input` | GA4 | Nutzer- und Item-Matrix für Präzisionsberechnung | `src/analysis/recommender.py` |
+
