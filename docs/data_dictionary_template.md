@@ -6,18 +6,57 @@
 
 ---
 
+## Metadaten
+
+| Feld | Wert |
+|------|------|
+| **Version** | 1.1.0 |
+| **Letzte Aktualisierung** | 2026-04-07 |
+| **Erstellt von** | Person B |
+| **Änderungshistorie** | v1.0.0 — Initiale Version (KW 13); v1.1.0 — GA4-Felder vervollständigt, Encoding-Referenz ergänzt, Sprache vereinheitlicht |
+
+---
+
 ## Datensatz 1: GA4 BigQuery Sample Ecommerce (Processed CSV)
 
 | Feld | Beschreibung | Typ | Beispielwert | Null? | Hypothese |
 |------|-------------|-----|-------------|-------|-----------|
 | `event_date` | Datum des Events (YYYYMMDD) | INT64 | `20210131` | Nein | H2 — Nutzeraktivität variiert nach Datum |
 | `event_timestamp` | Unix-Timestamp in Mikrosekunden | FLOAT64 | `1612069510766593.0` | Nein | — |
-| `event_name` | Name des Events | STRING | `page_view`, `scroll`, `user_engagement` | Nein | H2 — Bestimmte Events korrelieren mit Engagement |
+| `event_name` | Name des Events (siehe Werteliste unten) | STRING | `page_view`, `scroll`, `purchase` | Nein | H2 — Bestimmte Events korrelieren mit Engagement |
 | `user_pseudo_id` | Anonymisierte User-ID (kein PII) | FLOAT64 (ursprünglich STRING) | `1026454.427` | Nein | H2 — Nutzerverhalten über Sessions analysierbar |
 | `platform` | Plattform des Users | STRING | `WEB` | Nein | H2 — Verhalten unterscheidet sich zwischen Plattformen |
-| `device_category` | Gerätetyp | STRING | `mobile` | Nein | H2 — Mobile Nutzer zeigen anderes Verhalten |
-| `country` | Land des Users | STRING | `United States` | Nein | H2 — Geografische Unterschiede im Verhalten |
-| *(weitere Felder ergänzen)* | | | | | |
+| `device_category` | Gerätetyp des Users | STRING | `mobile`, `desktop`, `tablet` | Nein | H2 — Mobile Nutzer zeigen anderes Verhalten |
+| `country` | Land des Users | STRING | `United States`, `Germany` | Nein | H2 — Geografische Unterschiede im Verhalten |
+
+### Vollständige Werteliste: `event_name`
+
+| Event-Name | Kategorie | Beschreibung |
+|------------|-----------|-------------|
+| `page_view` | Navigation | Seitenaufruf |
+| `scroll` | Engagement | Nutzer scrollt auf der Seite |
+| `user_engagement` | Engagement | Mindest-Engagement-Schwelle erreicht |
+| `session_start` | Session | Beginn einer neuen Session |
+| `first_visit` | Akquisition | Erster Besuch des Nutzers |
+| `click` | Interaktion | Klick auf ein Element |
+| `view_item` | E-Commerce | Produktdetailseite aufgerufen |
+| `select_item` | E-Commerce | Produkt aus Liste ausgewählt |
+| `add_to_cart` | E-Commerce | Produkt in Warenkorb gelegt |
+| `begin_checkout` | E-Commerce | Checkout-Prozess gestartet |
+| `add_shipping_info` | E-Commerce | Versandinformationen eingegeben |
+| `add_payment_info` | E-Commerce | Zahlungsinformationen eingegeben |
+| `purchase` | E-Commerce | Kauf abgeschlossen |
+| `view_promotion` | Marketing | Promotion-Banner angezeigt |
+| `select_promotion` | Marketing | Promotion-Banner angeklickt |
+| `view_search_results` | Suche | Suchergebnisse angezeigt |
+
+### Vollständige Werteliste: `device_category`
+
+| Wert | Beschreibung |
+|------|-------------|
+| `mobile` | Smartphone |
+| `desktop` | Desktop / Laptop |
+| `tablet` | Tablet-Gerät |
 
 ---
 
@@ -28,20 +67,19 @@
 
 ---
 
-## Besonderheiten / bekannte Probleme
+## Besonderheiten / bekannte Probleme (GA4)
 
 - [x] Obfuskierte User-IDs — kein Cross-Device-Tracking möglich  
 - [x] Keine demografischen Daten enthalten (GA4-typisch)  
 - [x] `user_pseudo_id` wurde beim CSV‑Export zu FLOAT64 konvertiert  
   → Empfehlung: später in STRING casten  
-- [x] Dieses Subset enthält nur Engagement-Events  
-  → Keine Felder wie `transaction_id`, `purchase_revenue`, `items`  
-- [x] Daten stammen nur aus einem einzigen Tag  
+- [x] Dieses Subset enthält Engagement- und E-Commerce-Events  
+- [x] Daten stammen nur aus einem einzigen Tag (2021-01-31)  
   → Für Zeitreihenanalysen ungeeignet  
 
 ---
 
-## Hinweis für das Team
+## Hinweis für das Team (GA4)
 
 Dieser Datensatz eignet sich besonders für:
 
@@ -52,44 +90,136 @@ Dieser Datensatz eignet sich besonders für:
 
 Für Kauf- oder Revenue-Modelle wird ein zusätzlicher Datensatz benötigt.
 
+---
+
+## Datensatz 2: UCI Bank Marketing Dataset (Numerisch kodierte Version)
+
+Dieser Datensatz enthält die numerisch kodierte Version des UCI Bank Marketing Datensatzes mit 41.188 Zeilen und 21 Spalten.
+
+### Datenwörterbuch
+
+| Spalte | Beschreibung | Typ | Hinweise |
+|--------|-------------|------|---------|
+| `age` | Alter des Kunden | int | — |
+| `job` | Berufsgruppe (kodiert) | int | Encoding-Referenz siehe unten |
+| `marital` | Familienstand (kodiert) | int | Encoding-Referenz siehe unten |
+| `education` | Bildungsstand (kodiert) | int | Encoding-Referenz siehe unten |
+| `default` | Kreditausfall-Vorgeschichte (kodiert) | int | Encoding-Referenz siehe unten |
+| `housing` | Wohnungsdarlehen (kodiert) | int | Encoding-Referenz siehe unten |
+| `loan` | Privatdarlehen (kodiert) | int | Encoding-Referenz siehe unten |
+| `contact` | Kontaktkommunikationstyp (kodiert) | int | Encoding-Referenz siehe unten |
+| `month` | Letzter Kontaktmonat (kodiert) | int | Encoding-Referenz siehe unten |
+| `day_of_week` | Letzter Kontaktwochentag (kodiert) | int | Encoding-Referenz siehe unten |
+| `duration` | Gesprächsdauer in Sekunden | int | ⚠️ Soll aus prädiktiven Modellen ausgeschlossen werden |
+| `campaign` | Anzahl Kontakte während dieser Kampagne | int | — |
+| `pdays` | Tage seit letztem Kontakt | int | -1 = noch nie kontaktiert |
+| `previous` | Anzahl vorheriger Kontakte | int | — |
+| `poutcome` | Ergebnis der vorherigen Kampagne (kodiert) | int | Encoding-Referenz siehe unten |
+| `emp.var.rate` | Beschäftigungsveränderungsrate | float | Makroökonomisch |
+| `cons.price.idx` | Verbraucherpreisindex | float | Makroökonomisch |
+| `cons.conf.idx` | Verbrauchervertrauensindex | float | Makroökonomisch |
+| `euribor3m` | Euribor 3-Monats-Satz | float | Makroökonomisch |
+| `nr.employed` | Anzahl der Beschäftigten | float | Makroökonomisch |
+| `y` | Zielvariable (0 = nein, 1 = ja) | int | — |
+
+### Encoding-Referenz
+
+#### `job` — Berufsgruppe
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| -1 | `unknown` | Unbekannt |
+| 0 | `admin.` | Verwaltung |
+| 1 | `blue-collar` | Handwerk / Arbeiter |
+| 2 | `entrepreneur` | Unternehmer |
+| 3 | `housemaid` | Haushaltshilfe |
+| 4 | `management` | Management |
+| 5 | `retired` | Rentner |
+| 6 | `self-employed` | Selbstständig |
+| 7 | `services` | Dienstleistungen |
+| 8 | `student` | Student |
+| 9 | `technician` | Techniker |
+| 10 | `unemployed` | Arbeitslos |
+
+#### `marital` — Familienstand
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| -1 | `unknown` | Unbekannt |
+| 0 | `divorced` | Geschieden / verwitwet |
+| 1 | `married` | Verheiratet |
+| 2 | `single` | Ledig |
+
+#### `education` — Bildungsstand
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| -1 | `unknown` | Unbekannt |
+| 0 | `basic.4y` | Grundschule (4 Jahre) |
+| 1 | `basic.6y` | Grundschule (6 Jahre) |
+| 2 | `basic.9y` | Grundschule (9 Jahre) |
+| 3 | `high.school` | Gymnasium / Abitur |
+| 4 | `illiterate` | Analphabet |
+| 5 | `professional.course` | Berufsausbildung |
+| 6 | `university.degree` | Hochschulabschluss |
+
+#### `default` — Kreditausfall, `housing` — Wohnungsdarlehen, `loan` — Privatdarlehen
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| -1 | `unknown` | Unbekannt |
+| 0 | `no` | Nein |
+| 1 | `yes` | Ja |
+
+#### `contact` — Kontakttyp
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| 0 | `cellular` | Mobiltelefon |
+| 1 | `telephone` | Festnetz |
+
+#### `month` — Letzter Kontaktmonat
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| 0 | `apr` | April |
+| 1 | `aug` | August |
+| 2 | `dec` | Dezember |
+| 3 | `jul` | Juli |
+| 4 | `jun` | Juni |
+| 5 | `mar` | März |
+| 6 | `may` | Mai |
+| 7 | `nov` | November |
+| 8 | `oct` | Oktober |
+| 9 | `sep` | September |
+
+#### `day_of_week` — Letzter Kontaktwochentag
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| 0 | `fri` | Freitag |
+| 1 | `mon` | Montag |
+| 2 | `thu` | Donnerstag |
+| 3 | `tue` | Dienstag |
+| 4 | `wed` | Mittwoch |
+
+#### `poutcome` — Ergebnis der vorherigen Kampagne
+
+| Code | Originalwert | Bedeutung |
+|------|-------------|-----------|
+| 0 | `failure` | Misserfolg |
+| 1 | `nonexistent` | Kein vorheriger Kontakt |
+| 2 | `success` | Erfolg |
+
+### Datensatz-Informationen
+- **Zeilen:** 41.188  
+- **Spalten:** 21  
+- **Fehlende Werte:** 0 % in allen Spalten  
+- **Zielvariable:** `y` (0 = nein, 1 = ja)  
+- **Quelle:** UCI Machine Learning Repository  
+- **Lizenz:** CC BY 4.0  
 
 ---
-# UCI Bank Marketing Dataset (Numeric-Encoded Version)
-
-This repository contains the numeric-encoded version of the UCI Bank Marketing dataset with 41,188 rows and 21 columns.
-
-## 📘 Data Dictionary
-
-| Column | Description | Type | Notes |
-|--------|-------------|------|--------|
-| age | Customer age | int | — |
-| job | Job category (encoded) | int | Original categories mapped to integers |
-| marital | Marital status (encoded) | int | — |
-| education | Education level (encoded) | int | — |
-| default | Credit default history (encoded) | int | Values include -1, 0, 1 |
-| housing | Housing loan (encoded) | int | — |
-| loan | Personal loan (encoded) | int | — |
-| contact | Contact communication type (encoded) | int | — |
-| month | Last contact month (encoded) | int | — |
-| day_of_week | Last contact weekday (encoded) | int | — |
-| duration | Call duration (seconds) | int | ⚠️ Should be excluded from predictive modeling |
-| campaign | Number of contacts during this campaign | int | — |
-| pdays | Days since last contact | int | -1 = never contacted |
-| previous | Number of previous contacts | int | — |
-| poutcome | Outcome of previous campaign (encoded) | int | — |
-| emp.var.rate | Employment variation rate | float | Macro-economic |
-| cons.price.idx | Consumer price index | float | Macro-economic |
-| cons.conf.idx | Consumer confidence index | float | Macro-economic |
-| euribor3m | Euribor 3-month rate | float | Macro-economic |
-| nr.employed | Number of employees | float | Macro-economic |
-| y | Target variable (0 = no, 1 = yes) | int | — |
-
-## Dataset Info
-- Rows: 41,188  
-- Columns: 21  
-- Missing Values: 0% in all columns  
-- Target: `y` (0 = no, 1 = yes)
-
 
 ## Datensatz 3: EDPB Profiling Guidelines (WP 251 rev.01)
 
@@ -115,17 +245,25 @@ This repository contains the numeric-encoded version of the UCI Bank Marketing d
 
 ---
 
-## Datensatz 5: MIND — Microsoft News Dataset *(optional)*
+## Datensatz 5: MIND — Microsoft News Dataset
+
+> **Status:** Nicht verwendet — GA4-Datensatz ist für die Recommender-Analyse ausreichend.  
+> Dieser Datensatz wurde initial als optionale Erweiterung vorgesehen, wird aber im aktuellen Projektumfang nicht eingesetzt.
 
 | Feld | Beschreibung | Typ | Hypothese |
 |------|-------------|-----|-----------|
 | `user_id` | Anonymisierte User-ID | STRING | H2 |
-| `history` | Klick-Historie (Artikel-IDs) | ARRAY | H2 |
-| `impressions` | Gezeigte Artikel + Klick-Label | ARRAY | H2 |
+| `history` | Klick-Historie (Artikel-IDs) | ARRAY[STRING] | H2 — Vergangenes Verhalten als Signal |
+| `impressions` | Gezeigte Artikel + Klick-Label (Format: `news_id-label`) | ARRAY[STRING] | H2 — Implizites Feedback |
+| `news_id` | Eindeutige Artikel-ID | STRING | H2 |
+| `category` | Nachrichtenkategorie (z. B. Sports, Finance) | STRING | H2 — Thematische Präferenzen |
+| `subcategory` | Unterkategorie des Artikels | STRING | H2 |
+| `title` | Artikeltitel | STRING | H2 |
+| `abstract` | Kurzzusammenfassung des Artikels | STRING | H2 |
 
-**Quelle:** Microsoft Research — MIND Dataset
-**Status:** Optional — nur wenn GA4 für Recommender nicht ausreicht
-**Datei:** `data/raw/mind/` (nach Download entpacken)
+**Quelle:** Microsoft Research — MIND Dataset  
+**Datei:** `data/raw/mind/` (nach Download entpacken)  
+**Entscheidung:** Nicht in Verwendung — wird durch GA4-Datensatz ersetzt
 
 ---
 
