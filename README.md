@@ -121,3 +121,53 @@ vollständige Produktions-ML-Implementierung
 | [`docs/report_outline.md`](docs/report_outline.md) | Berichtsgliederung Kap. 1–9 + Anhang |
 | [`docs/data_dictionary_template.md`](docs/data_dictionary_template.md) | Datensatz-Dokumentation (Person B ausfüllen) |
 | [`docs/qa_checklist.md`](docs/qa_checklist.md) | QA-Gates vor Abgabe |
+
+---
+
+## Erweiterung: Cringe-Tipping — Der Personalisierungs-Tipping-Point
+
+> **Fragestellung:** Ab welchem Punkt wird Personalisierung kontraproduktiv?
+
+Max' ursprüngliche Analyse zeigt eine monoton steigende Kurve (mehr Personalisierung = mehr Performance). Diese Erweiterung prüft empirisch, ob es einen **Tipping Point** gibt — also einen Scheitel, ab dem weitere Personalisierung die Performance *senkt*.
+
+### Methodik
+
+Als Proxy für Personalisierungsintensität wird das Feature `campaign` (Anzahl der Kontaktversuche in der aktuellen Kampagne) verwendet:
+
+| Kontakte | Interpretation |
+|---|---|
+| 1–2 | Erster Kontakt — neutrale, generische Ansprache |
+| 3–4 | Gezieltes Follow-up — segment-basierte Personalisierung |
+| 5+ | Wiederholter persönlicher Druck — Hyper-Personalisierung / „Cringe" |
+
+Die **quadratische Regression** prüft, ob β₂ < 0 (konkave Kurve). Der Tipping Point ergibt sich analytisch als `x* = -β₁ / (2·β₂)`. Ein F-Test vergleicht das lineare gegen das quadratische Modell.
+
+### Dateien
+
+```
+Cringe-Tipping/
+├── cringe_tipping_analysis.ipynb   → Vollständige Analyse (Notebook)
+├── campaign_fatigue.py             → CampaignFatigueAnalyzer (OOP-Modul)
+└── outputs/
+    ├── cringe_tipping_main.png     → Inverted-U-Kurve + Tipping Point Markierung
+    ├── cringe_tipping_marginal.png → Marginale Effekte je Kontaktschritt
+    ├── campaign_fatigue_stats.csv  → Response Rate je Gruppe mit 95%-KI
+    └── model_parameters.csv        → Modell-Koeffizienten & Teststatistiken
+```
+
+### Verbindung zu H3
+
+Diese Analyse ergänzt Max' theoretischen Risk-Score-Ansatz (`06_datenschutzanalyse_risk_score_h3.ipynb`) mit einem empirischen Befund:
+
+- **Max zeigt:** Ab Risk Score > 0.7 überwiegen DSGVO-Risiken den Nutzen
+- **Cringe-Tipping zeigt:** Ab ~x* Kontakten sinkt die tatsächliche Response Rate
+- **Gemeinsame Aussage:** Hyper-Personalisierung ist weder compliance-konform noch wirksam — der optimale Punkt liegt dazwischen
+
+### Ausführen
+
+```bash
+# Im Cringe-Tipping-Ordner
+jupyter lab cringe_tipping_analysis.ipynb
+```
+
+Benötigt: `data/raw/bank_marketing/bank-additional-full.csv` (UCI ML Repository)
